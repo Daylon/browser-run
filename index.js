@@ -113,7 +113,7 @@ function runner (opts) {
         if (browser.pipe) {
           browser.setEncoding('utf8');
           browser.pipe(output);
-        } else if(opts.browser == 'chrome'){
+        } else if(~['chrome', 'firefox'].indexOf(opts.browser)){
           browser.stdout.pipe(output);
         }
 
@@ -127,7 +127,8 @@ function runner (opts) {
 
   dpl.stop = function () {
     try { server.destroy(); } catch (e) {}
-    if (browser) browser.kill();
+    if(browser && browser.kill === 'function') browser.kill();
+    else browser.stop();
   };
 
   return dpl;
